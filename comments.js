@@ -1,40 +1,33 @@
-// create web server
-// import express from 'express';
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const fs = require('fs');
-const path = require('path');
+// Create web server
+// Start the server
+// 1. Load the modules
+// 2. Create a web server
+// 3. Start the server
 
-// Define a port
-const PORT = 3000;
+// 1. Load the modules
+var http = require('http');
+var fs = require('fs');
+var qs = require('querystring');
+var path = require('path');
 
-// Use body-parser
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// 2. Create a web server
+var server = http.createServer(function (req, res) {
+    // 2.1. Get the URL
+    var url = req.url;
+    console.log(url);
 
-// Use express.static
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Get request
-app.get('/comments', (req, res) => {
-    fs.readFile('comments.json', 'utf8', (err, data) => {
-        if (err) {
-            return res.status(500).send('Server Error');
-        }
-        res.send(data);
-    });
-});
-
-// Post request
-app.post('/comments', (res) => {
-    fs.readFile('comments.json', 'utf8', (err, data) => {
-                        if (err) {
-                            return res.status(500).send('Server Error');
-                        }
-                    const comments = JSON.parse(data);
-                    const newComment = {
-                        id: Date.now(),
-                    }; // Add a closing curly brace here
-    });
-}  
+    // 2.2. Check if the URL is the root
+    if (url === '/') {
+        // 2.2.1. Read the file
+        fs.readFile('./public/index.html', function (err, data) {
+            // 2.2.2. Write the content of the file to the response
+            res.write(data);
+            // 2.2.3. End the response
+            res.end();
+        });
+    }
+    // 2.3. Check if the URL is /comments
+    else if (url === '/comments') {
+        // 2.3.1. Check if the request is a POST request
+        if (req.method === 'POST') {
+            //
